@@ -1,0 +1,36 @@
+.tf-folder {
+    background-color: #1F1F23;
+    height: 4.2rem;
+}
+
+.tf-folder-content {
+    padding-left: 1rem!important;
+    padding-right: 1rem!important;
+    padding-bottom: .5rem!important;
+    padding-top: .5rem!important;
+    height: 4.2rem;
+    align-items: center!important;
+    flex-wrap: nowrap!important;
+    display: flex;
+}
+
+.tf-folder-icon-closed {
+    height: 3rem;
+    width: 3rem;
+    background-color: inherit;
+}
+
+.tf-folder-icon-open {
+}
+
+.tf-folder-text {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 1rem;
+}
+
+.show {
+    display: block;
+}
