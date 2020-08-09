@@ -1,9 +1,49 @@
+/**
+ * Show More Button Observer
+ * If show more buttons exist, then the side nav bar has been loaded.
+ * When there are two on the screen (for followed and for recommended channels)
+ * then repeatedly click the first one to expand the list of followed channels.
+ */
+var followedLoaded = false;
+const config = { attributes: true, childList: true, subtree: true};
+const handleMutation = function(mutationsList, observer) {
+    var showMoreButtons = document.querySelectorAll("button[data-a-target='side-nav-show-more-button']");
+    if (showMoreButtons.length > 0 && !followedLoaded) {
+        if (showMoreButtons.length >= 2) {
+            showMoreButtons[0].click();
+        } else {
+            followedLoaded = true;
+            onFollowedChannelsLoaded();
+            buttonObserver.disconnect();
+        }     
+    }
+}
+const buttonObserver = new MutationObserver(handleMutation);
+buttonObserver.observe(document.body, config);
 
+function onFollowedChannelsLoaded() {
+    // sideNav is the topmost container for all followed, offline and online channels
+    var sideNav = document.getElementsByClassName('side-nav-section')[0];
+    var followed = getFollowedChannelsThroughDOM(sideNav);
+    var newFolder = addFolderToTop(sideNav);
 
+    var index = 0;
+    for (let channel of followed.online) {
+        makeDraggable(channel, index);
+        index++;
+    }
+    for (let channel of followed.offline) {
+        makeDraggable(channel, index);
+        index++;
+    }
+    //newFolder.children[1].append(followed.online[1]);
 
+}
+
+// Callled on window load
 window.onload = function() {
-    var followed = getFollowedChannelsThroughDOM();
-    console.log(followed);
+    // var followed = getFollowedChannelsThroughDOM();
+    // console.log(followed);
     // showMoreButton.addEventListener("click", reverseChildren);
     // let folder = document.createElement("div");
     // folder.classList.add("tf-folder");
@@ -15,18 +55,15 @@ window.onload = function() {
     // addFolderToTop(followed);
 
     // reverseChildren(followed);
-
-
 }
 
-// Returns HTMLCollection of all followed channels currently online
-function getFollowedChannelsThroughDOM() {
-    // Get all followed channels by clicking "show more".......
-    var sideNav = document.getElementsByClassName('side-nav-section')[0];
-    loadFollowedChannels(sideNav);
-    // Grab lise of all the followed channel panels
-    var followedList = sideNav.childNodes[1].childNodes;
+// Misc Funcs
 
+
+// Returns HTMLCollection of all followed channels currently online
+function getFollowedChannelsThroughDOM(sideNav) {
+    // Grab list of all the followed channel panels
+    var followedList = sideNav.childNodes[1].childNodes;
 
     var followed = {
         online: [],
@@ -44,37 +81,11 @@ function getFollowedChannelsThroughDOM() {
     return followed;
 }
 
-function loadFollowedChannels(sideNav) {
-    var followedUpdated = false;
-    const config = { attributes: true, childList: true, subtree: true};
-    const waitForChannelListUpdate = function(mutationsList, observer) {
-        for (let mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                var showMoreButtons = document.querySelectorAll("button[data-a-target='side-nav-show-more-button']");
-                if (showMoreButtons.length >= 2) {
-                    showMoreButtons[0].click();
-                } else {
-                    followedUpdated = true;
-                    buttonObserver.disconnect();
-                }
-            }
-        }     
-    }
-    const buttonObserver = new MutationObserver(waitForChannelListUpdate);
-    buttonObserver.observe(sideNav, config);
-
-    // observer registered, now click the button
-    document.querySelectorAll("button[data-a-target='side-nav-show-more-button']")[0].click();
-    
-}
-
-
 function isOnline(followedElement) {
     var liveStatusContainer = followedElement.getElementsByClassName("side-nav-card__live-status")[0]
     var liveStatusElementHTML = liveStatusContainer ?
                             liveStatusContainer.children[0].innerHTML :
                             null;
-    console.log(liveStatusElementHTML);
     if (liveStatusElementHTML === "Offline") {
         return false;
     }
@@ -92,9 +103,12 @@ function reverseChildren(parent) {
     }
 }
 
-function addFolderToTop(parent) {
+
+function addFolderToTop(sideNav) {
     var newFolder = createFolder("Test Folder Name");
-    parent.insertBefore(newFolder, parent.children[0]);
+    var channelContainer = sideNav.children[1];
+    channelContainer.insertBefore(newFolder, channelContainer.children[0]);
+    return newFolder;
 }
 
 function createFolder(name) {
@@ -104,29 +118,103 @@ function createFolder(name) {
     var content = document.createElement("div");
     content.classList.add("tf-folder-content");
 
+    var channels = document.createElement("div");
+    channels.classList.add("tf-folder-channels-closed");
+
     var icon = document.createElement("img");
-    icon.src =  chrome.runtime.getURL("images/down.jpg");
+    icon.classList.add("tf-folder-icon-closed");
+    icon.src = chrome.runtime.getURL("images/down.png");
 
     var iconContainer = document.createElement("div");
     iconContainer.append(icon);
-    iconContainer.classList.add("tf-folder-icon-closed");
+    iconContainer.classList.add("tf-folder-icon");
 
     var text = document.createElement("div");
     text.innerText = name;
     text.classList.add("tf-folder-text");
-    
 
     folder.append(content);
+    folder.append(channels);
     content.append(iconContainer);
     content.append(text);
+
+    folder.onclick = folderOnClick(folder);
 
     return folder;
 }
 
-function folderOnClick(element) {
-    show(element);
+function folderOnClick(folder) {
+    return function() {
+        var icon = folder.getElementsByClassName('tf-folder-icon')[0].children[0];
+        var content = folder.children[0];
+        var channels = folder.children[1];
+        if (icon.classList.contains('tf-folder-icon-closed')) {
+            icon.classList.remove('tf-folder-icon-closed');
+            icon.classList.add('tf-folder-icon-open');
+            icon.src = chrome.runtime.getURL("images/up.png");
+
+            channels.classList.remove('tf-folder-channels-closed');
+            channels.classList.add('tf-folder-channels-open');
+
+            content.classList.add('tf-folder-content-open');
+        } else {
+            icon.classList.remove('tf-folder-icon-open');
+            icon.classList.add('tf-folder-icon-closed');
+            icon.src = chrome.runtime.getURL("images/down.png");
+
+            channels.classList.remove('tf-folder-channels-open');
+            channels.classList.add('tf-folder-channels-closed');
+
+            content.classList.remove('tf-folder-content-open');
+        }
+    } 
 }
 
-function show(element) {
-    element.classList.toggle("show");
+function makeDraggable(channel, index) {
+    channel.classList.add('tf-channel');
+    channel.setAttribute('draggable', false);
+    channel.onmousedown = dragMouseDown;
+    var channelClone = null;
+    var rect = channel.getBoundingClientRect();
+    var width = rect.right - rect.left;
+    var offsetLeft = 0;
+    var offsetTop = 0;
+
+    function dragMouseDown(event) {
+        event = event || window.event;
+        event.preventDefault();
+        if (event.button == 0) {
+            channel.classList.add('tf-channel-selected');
+            offsetLeft = event.clientX - rect.left;
+            offsetTop = event.clientY - rect.top;
+            // Create a copy of the channel to drag around
+            channelClone = channel.cloneNode(true);
+            channelClone.classList.add('tf-channel-dragged');
+            channelClone.style.width = width + "px";
+            channelClone.style.left = rect.left + "px";
+            channelClone.style.top = rect.top + "px";
+            // Insert into document and add event listeners
+            document.body.insertBefore(channelClone, document.body.firstChild);
+            document.onmouseup = stopDrag;
+            document.onmousemove = drag;
+        }
+    }
+
+    function drag(event) {
+        event = event || window.event;
+        event.preventDefault();
+        if (event.button == 0) {
+            // update the coordinates 
+            channelClone.style.left = (event.clientX - offsetLeft) + "px";
+            channelClone.style.top = (event.clientY - offsetTop) + "px";
+        }
+    }
+
+    function stopDrag() {
+        // reset mouse events and get rid of clone
+        document.onmouseup = null;
+        document.onmousemove = null;
+        channel.classList.remove('tf-channel-selected');
+        channelClone.remove();
+    }
 }

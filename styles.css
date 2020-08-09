@@ -1,6 +1,9 @@
 .tf-folder {
     background-color: #1F1F23;
-    height: 4.2rem;
+}
+
+.tf-folder:hover {
+
 }
 
 .tf-folder-content {
@@ -8,19 +11,29 @@
     padding-right: 1rem!important;
     padding-bottom: .5rem!important;
     padding-top: .5rem!important;
-    height: 4.2rem;
     align-items: center!important;
     flex-wrap: nowrap!important;
     display: flex;
+    height: 4.2rem;
 }
 
-.tf-folder-icon-closed {
+.tf-folder-content:hover {
+    background-color: #26262C;
+    cursor: pointer;
+}
+
+.tf-folder-content-open {
+    background-color: #3f3f47;
+}
+
+.tf-folder-content-open:hover {
+    background-color: #4e4e58;
+}
+
+.tf-folder-icon {
     height: 3rem;
     width: 3rem;
     background-color: inherit;
-}
-
-.tf-folder-icon-open {
 }
 
 .tf-folder-text {
@@ -34,3 +47,29 @@
 .show {
     display: block;
 }
+
+.tf-folder-channels-closed {
+    display: none;
+}
+
+.tf-folder-channels-open {
+    display: block;
+}
+
+/*----------------
+Individual channels
+-----------------*/
+.tf-channel {
+    position: relative;
+}
+
+.tf-channel-selected {
+
+}
+
+.tf-channel-dragged {
+    position: fixed;
+    z-index:5000;
+    background-color: #1F1F23;
+}
+
