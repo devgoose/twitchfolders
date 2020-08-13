@@ -1,0 +1,31 @@
+/**
+ *
+ * Each folder has it's own mapping to all of the channels that belong under it, as such:
+ *
+ * "folders": "{"folder1": ["channel1", "channel2", "channel3"],
+ *              "folder2": ["channel4", "channel5", "channel6"],
+ *              ...,
+ *              "tf": "channel7,channel8,channel9"
+ *
+ * "order": "channel1,channel2,channel3..."
+ *
+ * Order is persisted with the "order" attribute and the order can be gotten from split()
+ *
+ * These mappings make it quick to get a folder's list of channels with just the folder's name.
+ *
+ * You can fetch and change a folder's channels like this:
+ *
+ * var mappings;
+ * var channels;
+ * chrome.storage.sync.get(['folders'], function(result) {
+ *      mappings = JSON.parse(result.folders);                          //Fetch mappings
+ *      channels = mappings.folder1;                                    //Fetch list of channels for a folder
+ *      channels.push("newChannel");                                    //Add new channel
+ *      chrome.storage.sync.set({"folders": JSON.stringify(mappings)}); //Write it back
+ * })
+ *
+ * Again, remember that 'folder' is a string and 'channels' is an array of strings.
+ *
+ *
+ * 
+ */

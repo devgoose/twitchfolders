@@ -1,6 +1,37 @@
-let changeColor = document.getElementById('changeColor');
+window.onload = function () {
+  let storagesrc = document.getElementById("storagesrc");
+  let clearbutton = document.getElementById("clearbutton");
+  let reloadbutton = document.getElementById("reloadbutton");
 
-chrome.storage.sync.get('color', function(data) {
-    changeColor.style.backgroundColor = data.color;
-    changeColor.setAttribute('value', data.color);
-});
+  clearbutton.addEventListener("click", clear);
+  reloadbutton.addEventListener("click", reload);
+
+  glob = {
+    folderOrder: null,
+    folders: null,
+  };
+
+  reload();
+
+  function reload() {
+    chrome.storage.sync.get(null, function (data) {
+      console.log(data);
+      glob.folderOrder = JSON.parse(data.folderOrder);
+      glob.folders = JSON.parse(data.folders);
+      console.log(glob);
+
+      storagesrc.innerHTML = JSON.stringify(glob, null, 2);
+    });
+  }
+
+  function clear() {
+    chrome.storage.sync.clear(function () {
+      chrome.storage.sync.set(
+        { folderOrder: JSON.stringify([]), folders: JSON.stringify({}) },
+        function () {
+          reload();
+        }
+      );
+    });
+  }
+};

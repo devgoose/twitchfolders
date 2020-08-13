@@ -1,0 +1,28 @@
+{
+  "name": "twitchfolders",
+  "version": "0.1.0",
+  "description": "",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chrome": "0.0.122",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
+    "merge-stream": "^2.0.0",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "npx": "^10.2.2",
+    "tslint": "^6.1.3",
+    "typescript-tslint-plugin": "^0.5.5"
+  }
+}

@@ -1,0 +1,146 @@
+.tf-folder {
+  z-index: 5001;
+  background-color: #1f1f23;
+}
+
+.tf-folder:hover {
+  background-color: #26262c;
+  cursor: pointer;
+}
+
+.tf-folder-hover {
+  background-color: #26262c;
+  cursor: pointer;
+}
+
+.tf-folder-content {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-top: 0.5rem !important;
+  display: flex;
+  min-height: 4.2rem;
+}
+
+/*
+.tf-folder-content:hover {
+}*/
+
+.tf-folder-content-open {
+  background-color: #3f3f47;
+}
+
+.tf-folder-content-open:hover {
+  background-color: #4e4e58;
+}
+
+.tf-folder-icon {
+  width: 3rem;
+  height: 3rem;
+  font-size: 3rem;
+  background-color: inherit;
+}
+
+.tf-folder-text {
+  flex-grow: 1;
+  height: 3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 1rem;
+  line-height: 3rem;
+  user-select: none;
+}
+
+.tf-folder-input {
+  height: 3rem;
+  margin-left: 1rem;
+  line-height: 3rem;
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+/*----------------
+Channel container styles
+-----------------*/
+
+.tf-folder-channels {
+  display: none;
+}
+
+.tf-folder-channels-open {
+  display: block;
+}
+
+/*----------------
+Individual channels
+-----------------*/
+.tf-channel {
+  position: relative;
+}
+/*
+.tf-channel-selected {
+}
+*/
+
+.tf-channel-dragged {
+  z-index: 5000;
+  background-color: #1f1f23;
+  height: 0rem;
+}
+
+/*--------------------
+Tool bar
+---------------------*/
+.tf-toolbar {
+  background-color: #1f1f23;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  padding-top: 0.5rem !important;
+  height: 4.2rem;
+  overflow: auto;
+}
+
+.tf-toolbar-icon {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  float: right;
+}
+
+.tf-toolbar-spacer {
+  height: 3rem;
+}
+
+/*------------------
+Icons
+----------------*/
+.fa-folder-plus {
+  cursor: pointer;
+  color: #9147ff;
+  display: inline-block;
+  width: 100%;
+}
+
+.fa-folder-minus {
+  cursor: pointer;
+  color: #9147ff;
+  display: inline-block;
+  width: 100%;
+}
+
+.fa-chevron-down {
+  color: #9147ff;
+  cursor: pointer;
+}
+
+.fa-chevron-up {
+  color: #9147ff;
+  cursor: pointer;
+}
