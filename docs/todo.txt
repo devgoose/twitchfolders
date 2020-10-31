@@ -1,6 +1,0 @@
-make sure saving/loading with the folders works correctly
-
-add background to folder channels so you can tell what folder has what channels
-
-Renaming function
-Deleting function
